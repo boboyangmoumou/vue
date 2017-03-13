@@ -30,14 +30,35 @@
             <div class="background">
                 <img :src="seller.avatar" width="100%" height="100%"/>
             </div>
-            <div v-show="detailShow" class="detail">
-                <div class="detail-wrapper clearfix">
-                    <div class="detail-main">
-                       <h1 class="name1">{{seller.name}}</h1>
+            <transition name="fade">
+            <div v-show="detailShow" class="detail" transition="fade">
+                    <div class="detail-wrapper clearfix">
+                        <div class="detail-main">    
+                        <h1 class="name1">{{seller.name}}</h1>
+                        <div class="title">
+                            <div class="line"></div>
+                            <div class="text">优惠信息</div>
+                            <div class="line"></div>
+                        </div>
+                        <ul v-if="seller.supports" class="supports">
+                            <li class="support-item" v-for="(item,index) in seller.supports">
+                                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                                <span class="text">{{seller.supports[index].description}}</span>
+                            </li>
+                        </ul>
+                        <div class="title">
+                            <div class="line"></div>
+                            <div class="text">商家信息</div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="bulletin">
+                            <p class="content">{{seller.bulletin}}</p>         
+                        </div>
+                        </div>
                     </div>
+                    <div class="detail-close" @click="hideDetail"> × </div>
                 </div>
-                <div class="detail-close"> × </div>
-            </div>
+            </transition>
     </div>
 </template>
 <script>
@@ -56,6 +77,9 @@
         methods: {
             showDetail() {
                 this.detailShow = true
+            },
+            hideDetail() {
+                this.detailShow = false
             }
         },
         created() {
@@ -154,8 +178,6 @@
     }
     
     .decrease {
-        background-size: 12px 12px;
-        background-repeat: no-repeat;
         background-image: url(decrease_1@2x.png);
     }
     
@@ -237,6 +259,16 @@
         overflow: auto;
         background: rgba(7, 17, 27, 0.8);
     }
+    
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 1s;
+    }
+    
+    .fade-enter,
+    .fade-leave-active {
+        opacity: 0;
+    }
     /*清除浮动*/
     
     .clearfix {
@@ -271,6 +303,7 @@
         height: 32px;
         margin: -64px auto 0 auto;
         clear: both;
+        cursor: pointer;
     }
     
     .name1 {
@@ -278,5 +311,58 @@
         line-height: 16px;
         font-size: 16px;
         font-weight: 700;
+    }
+    
+    .detail-main .title {
+        display: flex;
+        width: 80%;
+        margin: 28px auto 24px auto;
+    }
+    
+    .detail-main .line {
+        flex: 1;
+        position: relative;
+        top: -6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .detail-main .text {
+        padding: 0 12px;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 22px;
+    }
+    
+    .supports {
+        width: 80%;
+        margin: 0 auto;
+    }
+    
+    .detail-main .support-item {
+        padding: 0 12px;
+        margin-bottom: 12px;
+        font-size: 0;
+    }
+    
+    .detail-main .support-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .detail-main .icon {
+        display: inline-block;
+        width: 24px;
+        height: 22px;
+        vertical-align: top;
+    }
+    
+    .bulletin {
+        width: 80%;
+        margin: 0 auto;
+    }
+    
+    .bulletin .content {
+        padding: 0 12px;
+        line-height: 24px;
+        font-size: 12px;
     }
 </style>
