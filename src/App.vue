@@ -18,7 +18,7 @@
           <router-link to="/seller">商家</router-link>
           </div>
       </div>
-      <router-view></router-view>
+      <router-view :seller="seller"></router-view>
     </div>
 </template>
 
@@ -36,7 +36,7 @@
                 response = response.body;
                 if (response.errno === ERR_OK) {
                     this.seller = response.data;
-                    console.log(this.seller);
+                    // console.log(this.seller);
                 }
             });
         },
