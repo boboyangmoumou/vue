@@ -110,7 +110,7 @@
         border-radius: 2px;
     }
     
-    .content {
+    .content-wrapper .content {
         display: inline-block;
         margin-left: 16px;
         font-size: 14px;
@@ -140,7 +140,7 @@
         font-style: normal;
     }
     
-    .title {
+    .content-wrapper .title {
         margin: 2px 0 8px 0;
     }
     
