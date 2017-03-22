@@ -3,15 +3,16 @@
         <div class="content">
             <div class="content-left">
                 <div class="logo-wrapper">
-                    <div class="logo">
-                        <i class="icon-shopping_cart">购</i>
+                    <div class="logo" :class="{'highlight':totalCount>0}">
+                        <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}">购</i>
                     </div>
+                    <div class="num" v-show="totalCount>0">{{totalCount}}</div>
                 </div>
-                <div class="price">0元</div>
-                <div class="desc">另需配送费{{deliveryPrice}}元</div>
+                <div class="price" :class="{'highlight':totalCount>0}">￥{{totalPrice}}</div>
+                <div class="desc">另需配送费 ￥{{deliveryPrice}}元</div>
             </div>
             <div class="content-right">
-                <div class="pay">还需{{minPrice}}元起送</div>
+                <div class="pay">还需 ￥{{minPrice}}元起送</div>
             </div>
         </div>  
     </div>
@@ -19,6 +20,15 @@
 <script>
     export default {
         props: {
+            selectFoods: {
+                type: Array,
+                default () {
+                    return [{
+                        price: 10,
+                        count: 1
+                    }];
+                }
+            },
             deliveryPrice: {
                 type: Number,
                 default: 0
@@ -26,6 +36,22 @@
             minPrice: {
                 type: Number,
                 default: 0
+            }
+        },
+        computed: {
+            totalPrice() {
+                let total = 0;
+                this.selectFoods.forEach((food) => {
+                    total += food.price * food.count; //进行累加
+                });
+                return total;
+            },
+            totalCount() {
+                let count = 0;
+                this.selectFoods.forEach((food) => {
+                    count += food.count;
+                });
+                return count;
             }
         }
     };
@@ -58,6 +84,7 @@
         vertical-align: top;
         border-radius: 50%;
         background: #141d27;
+        position: relative;
     }
     
     .shopcart .content .logo {
@@ -68,10 +95,18 @@
         background: #2b343c;
     }
     
+    .shopcart .content .logo .highlight {
+        background: rgb(0, 160, 220);
+    }
+    
     .shopcart .content .logo .icon-shopping_cart {
         line-height: 44px;
         font-size: 24px;
         color: #80858a;
+    }
+    
+    .icon-shopping_cart .highlight {
+        color: #fff;
     }
     
     .shopcart .content .price {
@@ -85,6 +120,10 @@
         font-size: 16px;
         font-weight: 700;
         color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .price .highlight {
+        color: #fff;
     }
     
     .shopcart .content .desc {
@@ -114,5 +153,21 @@
         color: #808387;
         font-size: 12px;
         font-weight: 700;
+    }
+    
+    .shopcart .num {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+        border-radius: 16px;
+        font-size: 9px;
+        font-weight: 700;
+        color: #fff;
+        background: rgb(240, 20, 20);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     }
 </style>
