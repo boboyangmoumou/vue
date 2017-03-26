@@ -31,6 +31,9 @@
                                     <span class="now">￥{{food.price}}</span>
                                     <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                                 </div>
+                                <div class="cartcontrol-wrapper">
+                                    <cartcontrol :food="food"></cartcontrol>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -43,6 +46,7 @@
 <script>
     import BScroll from 'better-scroll';
     import shopcart from 'components/shopcart/shopcart';
+    import cartcontrol from 'components/cartcontrol/cartcontrol';
     const ERR_OK = 0;
     export default {
         props: {
@@ -93,6 +97,7 @@
                     click: true
                 });
                 this.foodScroll = new BScroll(this.$refs.foodsWrapper, {
+                    click: true,
                     probeType: 3 //实现位置监听
                 });
                 this.foodScroll.on('scroll', (pos) => {
@@ -111,11 +116,13 @@
             }
         },
         components: {
-            shopcart
+            shopcart,
+            cartcontrol
         }
     };
 </script>
 <style lang="">
+    @import "../../common/style.css";
     .goods {
         display: flex;
         position: absolute;
@@ -229,6 +236,7 @@
     .foods-wrapper .food-item .content {
         margin: 0;
         flex: 1;
+        position: relative;
     }
     
     .foods-wrapper .food-item .content .name {
@@ -268,5 +276,11 @@
         text-decoration: line-through;
         font-size: 10px;
         color: rgb(147, 153, 159);
+    }
+    
+    .cartcontrol-wrapper {
+        position: absolute;
+        right: 0;
+        bottom: 12px;
     }
 </style>
