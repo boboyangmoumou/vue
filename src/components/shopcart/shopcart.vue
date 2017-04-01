@@ -1,10 +1,10 @@
 <template>
     <div class="shopcart">
-        <div class="content">
+        <div class="content" @click="toggleList">
             <div class="content-left">
                 <div class="logo-wrapper">
                     <div class="logo" :class="{'highlight':totalCount>0}">
-                        <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}">购</i>
+                        <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
                     </div>
                     <div class="num" v-show="totalCount>0">{{totalCount}}</div>
                 </div>
@@ -12,12 +12,40 @@
                 <div class="desc">另需配送费 ￥{{deliveryPrice}}元</div>
             </div>
             <div class="content-right">
-                <div class="pay">还需 ￥{{minPrice}}元起送</div>
+                <div class="pay" :class="payClass">{{payDesc}}</div>
             </div>
+
         </div>  
+        <div class="ball-container">
+            <transition name="drop">
+            <div v-for="ball in balls" v-show="ball.show" class="ball">
+                <div class="inner"></div>
+            </div>
+            </transition>
+        </div>
+        <div class="shopcart-list" v-show="listShow">
+            <div class="list-header">
+                <h1 class="title">购物车</h1>
+                <span class="empty">清空</span>
+            </div>
+            <div class="list-content">
+                <ul>
+                    <li class="food" v-for="food in selectFoods">
+                        <span class="name">{{food.name}}</span>
+                        <div class="price">
+                            <span>￥{{food.price*food.count}}</span>
+                        </div>
+                        <div class="cartcontrol-wrapper">
+                            <cartcontrol :food="food"></cartcontrol>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+    import cartcontrol from 'components/cartcontrol/cartcontrol';
     export default {
         props: {
             selectFoods: {
@@ -38,6 +66,21 @@
                 default: 0
             }
         },
+        data() {
+            return {
+                balls: [{
+                    show: false
+                }, {
+                    show: false
+                }, {
+                    show: false
+                }, {
+                    show: false
+                }, {
+                    show: false
+                }, ]
+            }
+        },
         computed: {
             totalPrice() {
                 let total = 0;
@@ -52,8 +95,36 @@
                     count += food.count;
                 });
                 return count;
+            },
+            payDesc() {
+                if (this.totalPrice === 0) {
+                    return `￥${this.minPrice}元起送`;
+                } else if (this.totalPrice < this.minPrice) {
+                    let diff = this.minPrice - this.totalPrice;
+                    return `还差 ￥${diff}元起送`;
+                } else {
+                    return '去结算';
+                }
+            },
+            payClass() {
+                if (this.totalPrice < this.minPrice) {
+                    return 'not-enough';
+                } else {
+                    return 'enough';
+                }
             }
-        }
+        },
+        components: {
+            cartcontrol
+        },
+        methods: {
+            toggleList() {
+                if (!this.totalCount) {
+                    return;
+                }
+                this.fold = !this.fold;
+            }
+        },
     };
 </script>
 <style lang="">
@@ -94,10 +165,9 @@
         text-align: center;
         background: #2b343c;
     }
-    
-    .shopcart .content .logo .highlight {
+    /*.shopcart .content .logo .highlight {
         background: rgb(0, 160, 220);
-    }
+    }*/
     
     .shopcart .content .logo .icon-shopping_cart {
         line-height: 44px;
@@ -169,5 +239,33 @@
         color: #fff;
         background: rgb(240, 20, 20);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+    
+    .enough {
+        background: #00b43c;
+        color: #fff!important;
+    }
+    
+    .not-enough {
+        background: #2b333b;
+    }
+    
+    .ball-container .ball {
+        position: fixed;
+        left: 32px;
+        bottom: 22px;
+        z-index: 200;
+    }
+    
+    .drop-transition {
+        transition: all 0.4s;
+    }
+    
+    .drop-transition .inner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: rgb(0, 160, 220);
+        transition: all 0.4s;
     }
 </style>
