@@ -17,34 +17,37 @@
 
         </div>  
         <div class="ball-container">
-            <transition name="drop">
+            <!--<transition name="drop">-->
             <div v-for="ball in balls" v-show="ball.show" class="ball">
                 <div class="inner"></div>
             </div>
-            </transition>
+            <!--</transition>-->
         </div>
-        <div class="shopcart-list" v-show="listShow">
-            <div class="list-header">
-                <h1 class="title">购物车</h1>
-                <span class="empty">清空</span>
+        <transition name="fold">    
+            <div class="shopcart-list" v-show="listShow">
+                <div class="list-header">
+                    <h1 class="title">购物车</h1>
+                    <span class="empty">清空</span>
+                </div>
+                <div class="list-content" ref="listContent">
+                    <ul>
+                        <li class="food" v-for="food in selectFoods">
+                            <span class="name">{{food.name}}</span>
+                            <div class="price">
+                                <span>￥{{food.price*food.count}}</span>
+                            </div>
+                            <div class="cartcontrol-wrapper">
+                                <cartcontrol :food="food"></cartcontrol>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="list-content">
-                <ul>
-                    <li class="food" v-for="food in selectFoods">
-                        <span class="name">{{food.name}}</span>
-                        <div class="price">
-                            <span>￥{{food.price*food.count}}</span>
-                        </div>
-                        <div class="cartcontrol-wrapper">
-                            <cartcontrol :food="food"></cartcontrol>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 <script>
+    import BScroll from 'better-scroll';
     import cartcontrol from 'components/cartcontrol/cartcontrol';
     export default {
         props: {
@@ -78,8 +81,10 @@
                     show: false
                 }, {
                     show: false
-                }, ]
-            }
+                }, ],
+                dropBalls: [],
+                fold: true
+            };
         },
         computed: {
             totalPrice() {
@@ -112,7 +117,26 @@
                 } else {
                     return 'enough';
                 }
-            }
+            },
+            listShow() {
+                if (!this.totalCount) {
+                    this.fold = true;
+                    return false;
+                }
+                let show = !this.fold;
+                if (show) {
+                    this.$nextTick(() => {
+                        if (!this.scroll) {
+                            this.scroll = new BScroll(this.$refs.listContent, {
+                                click: true
+                            });
+                        } else {
+                            this.scroll.refresh();
+                        }
+                    });
+                }
+                return show;
+            },
         },
         components: {
             cartcontrol
@@ -122,7 +146,7 @@
                 if (!this.totalCount) {
                     return;
                 }
-                this.fold = !this.fold;
+                this.fold = !this.fold; //做取反
             }
         },
     };
@@ -155,7 +179,6 @@
         vertical-align: top;
         border-radius: 50%;
         background: #141d27;
-        position: relative;
     }
     
     .shopcart .content .logo {
@@ -267,5 +290,73 @@
         border-radius: 50%;
         background: rgb(0, 160, 220);
         transition: all 0.4s;
+    }
+    
+    .shopcart-list {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        width: 100%;
+        transition: all 0.5s;
+    }
+    
+    .fold-transition {
+        transform: translate3d(0, -100%, 0);
+    }
+    
+    .fold-enter,
+    .fold-leave {
+        transform: translate3d(0, 0, 0);
+    }
+    
+    .list-header {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 18px;
+        background: #f3f5f7;
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+    }
+    
+    .shopcart .title {
+        float: left;
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+    }
+    
+    .shopcart .empty {
+        float: right;
+        font-size: 12px;
+        color: rgb(0, 160, 220);
+    }
+    
+    .shopcart .list-content {
+        padding: 0 18px;
+        max-height: 217px;
+        background: #fff;
+        overflow: hidden;
+    }
+    
+    .shopcart .list-content .food {
+        position: relative;
+        padding: 12px 0;
+        box-sizing: border-box;
+        border-top: none;
+        border: 1px solid rgba(7, 17, 27, 0.1);
+    }
+    
+    .shopcart .list-content .name {
+        line-height: 24px;
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+    }
+    
+    .shopcart .list-content .price {
+        position: absolute;
+        right: 90px;
+        bottom: 12px;
+        line-height: 24px;
+        font-weight: 700;
+        color: rgb(240, 20, 20);
     }
 </style>
