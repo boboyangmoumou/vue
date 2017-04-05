@@ -11,7 +11,7 @@
                 <div class="price" :class="{'highlight':totalCount>0}">￥{{totalPrice}}</div>
                 <div class="desc">另需配送费 ￥{{deliveryPrice}}元</div>
             </div>
-            <div class="content-right">
+            <div class="content-right" @click.stop.prevent="pay">
                 <div class="pay" :class="payClass">{{payDesc}}</div>
             </div>
 
@@ -44,7 +44,13 @@
                 </div>
             </div>
         </transition>
+    
+    
+     <transition name="fade">
+        <div class="list-mask" v-show="listShow"></div>
+    </transition>
     </div>
+   
 </template>
 <script>
     import BScroll from 'better-scroll';
@@ -147,7 +153,13 @@
                     return;
                 }
                 this.fold = !this.fold; //做取反
-            }
+            },
+            pay() {
+                if (this.totalPrice < this.minPrice) {
+                    return;
+                }
+                window.alert(`支付${this.totalPrice}`)
+            },
         },
     };
 </script>
@@ -272,8 +284,7 @@
     .not-enough {
         background: #2b333b;
     }
-    
-    .ball-container .ball {
+    /*.ball-container .ball {
         position: fixed;
         left: 32px;
         bottom: 22px;
@@ -290,7 +301,7 @@
         border-radius: 50%;
         background: rgb(0, 160, 220);
         transition: all 0.4s;
-    }
+    }*/
     
     .shopcart-list {
         position: absolute;
@@ -298,21 +309,25 @@
         top: 0;
         z-index: -1;
         width: 100%;
-        transition: all 0.5s;
     }
     
     .fold-transition {
-        transform: translate3d(0, -100%, 0);
+        transition: all 2s linear;
     }
     
-    .fold-enter,
-    .fold-leave {
+    .fold-enter-active,
+    .fold-leave-active {
         transform: translate3d(0, 0, 0);
     }
     
-    .list-header {
+    .fold-enter,
+    .fold-leave-active {
+        transform: translate3d(0, -100%, 0);
+    }
+    
+    .shopcart-list .list-header {
         height: 40px;
-        line-height: 40px;
+        line-height: 40px!important;
         padding: 0 18px;
         background: #f3f5f7;
         border-bottom: 1px solid rgba(7, 17, 27, 0.1);
@@ -342,7 +357,7 @@
         padding: 12px 0;
         box-sizing: border-box;
         border-top: none;
-        border: 1px solid rgba(7, 17, 27, 0.1);
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1);
     }
     
     .shopcart .list-content .name {
@@ -358,5 +373,33 @@
         line-height: 24px;
         font-weight: 700;
         color: rgb(240, 20, 20);
+    }
+    
+    .list-content .cartcontrol-wrapper {
+        position: absolute;
+        right: 0;
+        bottom: 6px;
+    }
+    
+    .list-mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 40;
+        backdrop-filter: blur(10px);
+    }
+    
+    .fade-transition {
+        transition: all 0.5s;
+        opacity: 1;
+        background: rgba(7, 17, 27, 0.6);
+    }
+    
+    .fade-enter,
+    .fade-leave {
+        opacity: 0;
+        background: rgba(7, 17, 27, 0);
     }
 </style>
