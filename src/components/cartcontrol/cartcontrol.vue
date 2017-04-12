@@ -60,7 +60,7 @@
         transform: translate3d(0, 0, 0);
     }
     
-    .inner {
+    .cartcontrol .inner {
         display: inline-block;
         line-height: 24px;
         font-size: 24px;

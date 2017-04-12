@@ -52,7 +52,7 @@
         padding: 0;
         list-style: none;
         font-weight: 200;
-        line-height: 1;
+        /*line-height: 1;*/
         font-family: "微软雅黑";
     }
     
