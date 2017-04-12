@@ -175,6 +175,6 @@
         font-size: 10px;
         border-radius: 10px;
         color: #fff;
-        background: rgb(0)
+        background: rgb(0, 160, 220);
     }
 </style>
