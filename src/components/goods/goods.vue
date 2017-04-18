@@ -41,7 +41,7 @@
             </ul>
         </div>
         <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
-        <food :food="selectedFood" v-ref:food></food>
+        <food :food="selectedFood" ref="food"></food>
     </div>
     
 </template>
@@ -307,9 +307,10 @@
         color: rgb(147, 153, 159);
     }
     
-    .cartcontrol-wrapper {
+    .content .cartcontrol-wrapper {
         position: absolute;
         right: 0;
-        bottom: 12px;
+        bottom: -4px;
+        z-index: 40;
     }
 </style>
