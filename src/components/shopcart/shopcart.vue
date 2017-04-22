@@ -309,18 +309,14 @@
         top: 0;
         z-index: -1;
         width: 100%;
-    }
-    
-    .fold-transition {
         transition: all 2s linear;
     }
     
-    .fold-enter-active,
-    .fold-leave-active {
+    .fold-transition {
         transform: translate3d(0, 0, 0);
     }
     
-    .fold-enter,
+    .fold-enter-active,
     .fold-leave-active {
         transform: translate3d(0, -100%, 0);
     }
@@ -397,8 +393,8 @@
         background: rgba(7, 17, 27, 0.6);
     }
     
-    .fade-enter-active,
-    .fade-leave-active {
+    .fade-enter,
+    .fade-leave {
         opacity: 0;
         background: rgba(7, 17, 27, 0);
     }
