@@ -62,7 +62,7 @@
                 goods: [],
                 listHeight: [], //进行定义
                 scrollY: 0, //定义变量进行跟踪
-                selectedFood: {},
+                selectedFood: {}
             };
         },
         created() {
